@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ganji — AI-Powered Personal Finance Coach | Coming Soon</title>
+  <meta name="description" content="ganji is Kenya's first AI-powered personal finance coach. Budget, save, track debt, and build wealth — in English and Swahili. Join the waitlist.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            dm: ['DM Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    .logo-g { color: #22C55E; }
+    .logo-a { color: #FBBF24; }
+    .logo-n { color: #FFFFFF; }
+    .logo-j { color: #F97316; }
+    .logo-i { color: #38BDF8; }
+    .nav-glass {
+      background: rgba(10,10,10,0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      box-shadow: 0 0 30px -8px rgba(34,197,94,0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 45px -8px rgba(34,197,94,0.6);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .btn-cta-nav {
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      box-shadow: 0 0 20px -6px rgba(34,197,94,0.5);
+      transition: all 0.25s ease;
+    }
+    .btn-cta-nav:hover {
+      box-shadow: 0 0 30px -4px rgba(34,197,94,0.7);
+      transform: scale(1.03);
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, rgba(34,197,94,0.3), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px -20px rgba(0,0,0,0.5);
+    }
+    .pricing-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.4s ease;
+    }
+    .pricing-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-4px);
+    }
+    .pricing-popular {
+      background: linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(10,10,10,1) 50%);
+      border-color: rgba(34,197,94,0.3);
+    }
+    .pricing-popular:hover {
+      border-color: rgba(34,197,94,0.5);
+      box-shadow: 0 0 60px -20px rgba(34,197,94,0.2);
+    }
+    .phone-frame {
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      border-radius: 2.5rem;
+      padding: 8px;
+      box-shadow: 0 50px 100px -30px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .phone-screen {
+      background: #0d0d0d;
+      border-radius: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 24px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      z-index: 10;
+    }
+    .health-ring-progress {
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .health-ring-progress.animated { stroke-dashoffset: 79; }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-track { animation: marquee 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .float-card { animation: float 4s ease-in-out infinite; }
+    .float-card-delay { animation: float 4s ease-in-out 1s infinite; }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .faq-answer.open { max-height: 300px; }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-item.active .faq-icon { transform: rotate(45deg); }
+    .stat-number {
+      background: linear-gradient(135deg, #FFFFFF, rgba(255,255,255,0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .floating-btn {
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .floating-btn.show { transform: translateY(0); opacity: 1; }
+    @keyframes vault-shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .vault-shimmer {
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.15), transparent);
+      background-size: 200% 100%;
+      animation: vault-shimmer 3s ease-in-out infinite;
+    }
+    .waitlist-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all 0.3s ease;
+    }
+    .waitlist-input:focus {
+      outline: none;
+      border-color: rgba(34,197,94,0.5);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.1);
+      background: rgba(255,255,255,0.08);
+    }
+    @keyframes badge-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
+    .badge-pulse { animation: badge-pulse 2.5s ease-in-out infinite; }
+    .persona-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.4s ease;
+    }
+    .persona-card:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+
+<body class="bg-[#0a0a0a] text-white font-inter antialiased overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-glass">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-[72px]">
+        <a href="#" class="flex items-center gap-2.5 shrink-0">
+          <span class="text-[1.65rem] font-extrabold tracking-tight leading-none">
+            <span class="logo-g">g</span><span class="logo-a">a</span><span class="logo-n">n</span><span class="logo-j">j</span><span class="logo-i">i</span>
+          </span>
+          <span class="hidden sm:inline-flex items-center text-[10px] font-bold tracking-widest uppercase bg-[#22C55E]/10 text-[#22C55E]/80 px-2.5 py-1 rounded-full badge-pulse">Coming Soon</span>
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#problem" class="text-sm text-white/50 hover:text-white transition-colors duration-200">The Problem</a>
+          <a href="#features" class="text-sm text-white/50 hover:text-white transition-colors duration-200">Features</a>
+          <a href="#who" class="text-sm text-white/50 hover:text-white transition-colors duration-200">Who It's For</a>
+          <a href="#pricing" class="text-sm text-white/50 hover:text-white transition-colors duration-200">Pricing</a>
+          <a href="#faq" class="text-sm text-white/50 hover:text-white transition-colors duration-200">FAQ</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="#waitlist" class="btn-cta-nav inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white">
+            <iconify-icon icon="lucide:bell-ring" width="15"></iconify-icon>
+            Join Waitlist
+          </a>
+        </div>
+        <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/5 transition-colors">
+          <iconify-icon icon="lucide:menu" width="22" class="text-white/70"></iconify-icon>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="mobile-menu fixed inset-0 z-[60] bg-[#0a0a0a]/98 backdrop-blur-xl flex flex-col">
+    <div class="flex items-center justify-between px-5 h-16">
+      <span class="text-[1.65rem] font-extrabold tracking-tight leading-none">
+        <span class="logo-g">g</span><span class="logo-a">a</span><span class="logo-n">n</span><span class="logo-j">j</span><span class="logo-i">i</span>
+      </span>
+      <button id="mobileMenuClose" class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/5 transition-colors">
+        <iconify-icon icon="lucide:x" width="22" class="text-white/70"></iconify-icon>
+      </button>
+    </div>
+    <div class="flex-1 flex flex-col justify-center px-8 gap-6">
+      <a href="#problem" class="mobile-link text-2xl font-light text-white/60 hover:text-white transition-colors">The Problem</a>
+      <a href="#features" class="mobile-link text-2xl font-light text-white/60 hover:text-white transition-colors">Features</a>
+      <a href="#who" class="mobile-link text-2xl font-light text-white/60 hover:text-white transition-colors">Who It's For</a>
+      <a href="#pricing" class="mobile-link text-2xl font-light text-white/60 hover:text-white transition-colors">Pricing</a>
+      <a href="#faq" class="mobile-link text-2xl font-light text-white/60 hover:text-white transition-colors">FAQ</a>
+      <div class="pt-6">
+        <a href="#waitlist" class="mobile-link btn-primary inline-flex items-center justify-center gap-2 w-full px-6 py-4 rounded-2xl text-base font-semibold text-white">
+          <iconify-icon icon="lucide:bell-ring" width="20"></iconify-icon>
+          Join the Waitlist
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center pt-20 pb-16 lg:pt-0 lg:pb-0 overflow-hidden">
+    <div class="hero-glow bg-[#22C55E] top-20 -left-40"></div>
+    <div class="hero-glow bg-[#FBBF24] top-40 right-[-200px] opacity-[0.06]"></div>
+    <div class="hero-glow bg-[#38BDF8] bottom-0 left-1/3 opacity-[0.05]"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+        <div class="max-w-xl">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] mb-8">
+            <span class="w-2 h-2 rounded-full bg-[#FBBF24] animate-pulse"></span>
+            <span class="text-xs font-medium text-white/60 tracking-wide">COMING SOON · BUILDING IN PUBLIC</span>
+          </div>
+          <h1 class="font-dm text-4xl sm:text-5xl lg:text-[3.5rem] font-light leading-[1.08] tracking-tight mb-6">
+            Your money<br>deserves an
+            <span class="font-semibold bg-gradient-to-r from-[#22C55E] via-[#FBBF24] to-[#38BDF8] bg-clip-text text-transparent"> AI coach</span>
+          </h1>
+          <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-4 max-w-md font-light">
+            The first AI-powered personal finance coach built for Kenyans. Budget, save, eliminate debt, and build wealth — conversationally, in English and Swahili.
+          </p>
+          <p class="text-sm text-white/30 mb-10 italic">"Weka Akili Pesa Yako"</p>
+          <div id="hero-waitlist" class="mb-6">
+            <form id="waitlistFormHero" class="flex flex-col sm:flex-row gap-3">
+              <div class="relative flex-1">
+                <iconify-icon icon="lucide:phone" width="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
+                <input type="tel" id="phoneHero" placeholder="2547XXXXXXXX" class="waitlist-input w-full pl-10 pr-4 py-4 rounded-xl text-sm text-white placeholder-white/25 font-medium" required>
+              </div>
+              <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-semibold text-white whitespace-nowrap shrink-0">
+                <iconify-icon icon="lucide:bell-ring" width="18"></iconify-icon>
+                Join Waitlist
+              </button>
+            </form>
+            <div id="hero-success" class="hidden items-center gap-3 bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-xl px-5 py-4">
+              <iconify-icon icon="lucide:check-circle-2" width="20" class="text-[#22C55E] shrink-0"></iconify-icon>
+              <div>
+                <p class="text-sm font-medium text-[#22C55E]">You're on the list!</p>
+                <p class="text-xs text-white/40">We'll notify you when ganji launches.</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/30">
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/60"></iconify-icon> ODPC Registered</span>
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/60"></iconify-icon> Your number stays private</span>
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/60"></iconify-icon> Android 8.0+</span>
+          </div>
+        </div>
+
+        <!-- Phone Mockup -->
+        <div class="flex justify-center lg:justify-end relative">
+          <div class="absolute -left-4 top-24 float-card hidden lg:block">
+            <div class="bg-white/[0.06] backdrop-blur-md border border-white/[0.1] rounded-2xl px-4 py-3 flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#22C55E]/15 flex items-center justify-center"><iconify-icon icon="lucide:target" width="18" class="text-[#22C55E]"></iconify-icon></div>
+              <div><div class="text-xs text-white/40">Goal: Emergency Fund</div><div class="text-sm font-semibold text-[#22C55E]">67% reached</div></div>
+            </div>
+          </div>
+          <div class="absolute -right-2 bottom-32 float-card-delay hidden lg:block">
+            <div class="bg-white/[0.06] backdrop-blur-md border border-white/[0.1] rounded-2xl px-4 py-3 flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#FBBF24]/15 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="18" class="text-[#FBBF24]"></iconify-icon></div>
+              <div><div class="text-xs text-white/40">Vault Balance</div><div class="text-sm font-semibold text-[#FBBF24]">KES 20,000</div></div>
+            </div>
+          </div>
+          <div class="phone-frame w-[272px] sm:w-[300px]">
+            <div class="phone-screen aspect-[9/19.5] relative">
+              <div class="phone-notch"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center z-20 bg-[#0d0d0d]/70 backdrop-blur-sm">
+                <div class="w-14 h-14 rounded-2xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center mb-3 badge-pulse">
+                  <iconify-icon icon="lucide:sparkles" width="24" class="text-[#22C55E]"></iconify-icon>
+                </div>
+                <p class="text-sm font-semibold">Coming Soon</p>
+                <p class="text-[11px] text-white/30 mt-1">Join the waitlist →</p>
+              </div>
+              <div class="absolute inset-0 flex flex-col p-5 pt-10 blur-[2px] brightness-50">
+                <div class="flex justify-between items-center text-[10px] text-white/40 mb-6 px-1">
+                  <span>9:41</span>
+                  <div class="flex items-center gap-1.5"><iconify-icon icon="lucide:signal" width="12"></iconify-icon><iconify-icon icon="lucide:wifi" width="12"></iconify-icon><iconify-icon icon="lucide:battery-full" width="14"></iconify-icon></div>
+                </div>
+                <div class="mb-5"><p class="text-xs text-white/40 mb-0.5">Good morning</p><p class="text-base font-semibold">Grace 👋</p></div>
+                <div class="flex justify-center mb-5">
+                  <div class="relative w-28 h-28">
+                    <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                      <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+                      <circle cx="60" cy="60" r="45" fill="none" stroke="url(#ringGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="79"/>
+                      <defs><linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22C55E"/><stop offset="50%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-2xl font-bold">72</span><span class="text-[10px] text-white/40">Healthy</span></div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mb-5">
+                  <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:wallet" width="14" class="text-[#22C55E] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Budget</p><p class="text-xs font-semibold">KES 12.4K</p></div>
+                  <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:piggy-bank" width="14" class="text-[#FBBF24] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Savings</p><p class="text-xs font-semibold">KES 45K</p></div>
+                  <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:landmark" width="14" class="text-[#F97316] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Vault</p><p class="text-xs font-semibold">KES 20K</p></div>
+                </div>
+                <div class="mt-auto bg-white/[0.04] border border-white/[0.08] rounded-2xl p-3 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#38BDF8] flex items-center justify-center shrink-0"><iconify-icon icon="lucide:bot" width="14" class="text-white"></iconify-icon></div>
+                  <div class="flex-1 min-w-0"><p class="text-[11px] text-white/30 truncate">Ask ganji anything about your money...</p></div>
+                  <iconify-icon icon="lucide:send" width="14" class="text-white/20 shrink-0"></iconify-icon>
+                </div>
+                <div class="flex justify-around items-center mt-3 pt-3 border-t border-white/[0.05]">
+                  <iconify-icon icon="lucide:layout-dashboard" width="18" class="text-[#22C55E]"></iconify-icon>
+                  <iconify-icon icon="lucide:message-circle" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:target" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:lock" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:user" width="18" class="text-white/25"></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM MARQUEE -->
+  <section class="relative border-y border-white/[0.05] py-5 overflow-hidden bg-white/[0.01]">
+    <div class="flex whitespace-nowrap">
+      <div class="marquee-track flex items-center gap-10 shrink-0 px-5">
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> 80% of Kenyans have no financial advisor</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> &lt;3% have life insurance</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> 22M adults, 9M on smartphones</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Mobile loan debt traps worsening</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Most salaries don't last the month</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Zero financial literacy in schools</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> 80% of Kenyans have no financial advisor</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> &lt;3% have life insurance</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> 22M adults, 9M on smartphones</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Mobile loan debt traps worsening</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Most salaries don't last the month</span>
+        <span class="text-white/10">·</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Zero financial literacy in schools</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section id="problem" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="fade-up">
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#F97316]/70 mb-4">The Problem</p>
+          <h2 class="font-dm text-3xl sm:text-4xl lg:text-[2.75rem] font-light tracking-tight mb-6 leading-tight">
+            Millions of Kenyans are<br><span class="font-semibold">flying blind with money</span>
+          </h2>
+          <p class="text-base text-white/40 leading-relaxed mb-8">
+            No budget. No plan. No financial education. Just a salary that vanishes by the 15th and a growing stack of mobile loans. This isn't a personal failure — it's a systemic gap that nobody is filling with the right tool.
+          </p>
+          <div class="space-y-5">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:user-x" width="18" class="text-[#F97316]"></iconify-icon></div>
+              <div><p class="text-sm font-medium mb-1">No access to a financial advisor</p><p class="text-sm text-white/35">Over 80% of Kenyans cannot afford or access qualified personal finance guidance.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:calendar-x" width="18" class="text-[#F97316]"></iconify-icon></div>
+              <div><p class="text-sm font-medium mb-1">Salaries don't last the month</p><p class="text-sm text-white/35">Most salaried Kenyans exhaust their pay before month-end with zero structured budgeting.</p></div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:shield-off" width="18" class="text-[#F97316]"></iconify-icon></div>
+              <div><p class="text-sm font-medium mb-1">Insurance penetration below 3%</p><p class="text-sm text-white/35">Life and medical cover remains inaccessible to the vast majority of the population.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 fade-up">
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">22M</div><p class="text-sm text-white/35">Kenyan adults (18–65)</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">80%</div><p class="text-sm text-white/35">No financial advisor</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">&lt;3%</div><p class="text-sm text-white/35">Have life insurance</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">9M</div><p class="text-sm text-white/35">Smartphone users</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-20 lg:py-28 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#22C55E]/70 mb-4">What We're Building</p>
+        <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Everything you need to<br><span class="font-semibold">master your money</span></h2>
+        <p class="text-base text-white/40 leading-relaxed">Eight intelligent modules working together to give you complete financial clarity — all in one app.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="feature-card rounded-2xl p-6 fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:message-circle" width="22" class="text-[#22C55E]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">AI Finance Coach</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Ask anything about your finances in English or Swahili. ganji remembers your context across conversations.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.05s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#38BDF8]/20 to-[#38BDF8]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:pie-chart" width="22" class="text-[#38BDF8]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">Smart Budgeting</h3>
+          <p class="text-sm text-white/40 leading-relaxed">5-minute setup with AI-generated 50/30/20 budgets. Automatic categorisation and spending alerts.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.1s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#F97316]/20 to-[#F97316]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:credit-card" width="22" class="text-[#F97316]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">Debt Manager</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Track all debts in one place. AI suggests avalanche vs snowball strategies. See your debt-free date.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.15s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FBBF24]/20 to-[#FBBF24]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:trending-up" width="22" class="text-[#FBBF24]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">Savings Education</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Learn about T-Bills, Bonds, and MMFs with live CBK rates. Plain-language guides in English and Swahili.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up relative overflow-hidden">
+          <div class="vault-shimmer absolute inset-0 rounded-2xl pointer-events-none"></div>
+          <div class="relative">
+            <div class="flex items-center gap-2 mb-5">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#22C55E]/25 to-[#FBBF24]/10 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="22" class="text-[#22C55E]"></iconify-icon></div>
+              <span class="text-[10px] font-bold tracking-widest uppercase bg-[#22C55E]/15 text-[#22C55E] px-2 py-0.5 rounded-full">New</span>
+            </div>
+            <h3 class="text-base font-semibold mb-2">ganji Vault</h3>
+            <p class="text-sm text-white/40 leading-relaxed">A secure digital safe. Lock funds for set periods, track growth, and build savings discipline.</p>
+          </div>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up relative overflow-hidden" style="transition-delay:0.05s">
+          <div class="vault-shimmer absolute inset-0 rounded-2xl pointer-events-none" style="animation-delay:1.5s"></div>
+          <div class="relative">
+            <div class="flex items-center gap-2 mb-5">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FBBF24]/25 to-[#F97316]/10 flex items-center justify-center"><iconify-icon icon="lucide:target" width="22" class="text-[#FBBF24]"></iconify-icon></div>
+              <span class="text-[10px] font-bold tracking-widest uppercase bg-[#FBBF24]/15 text-[#FBBF24] px-2 py-0.5 rounded-full">New</span>
+            </div>
+            <h3 class="text-base font-semibold mb-2">Goals Tracker</h3>
+            <p class="text-sm text-white/40 leading-relaxed">Set savings goals — school fees, emergency fund, holiday. Visual progress with AI-powered tips.</p>
+          </div>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.1s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#a78bfa]/20 to-[#a78bfa]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:shield" width="22" class="text-[#a78bfa]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">Insurance Info Centre</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Understand life, medical, and cover options. General comparisons of Jubilee, Britam, AAR and more.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.15s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#f472b6]/20 to-[#f472b6]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:heart-pulse" width="22" class="text-[#f472b6]"></iconify-icon></div>
+          <h3 class="text-base font-semibold mb-2">Daily Insights</h3>
+          <p class="text-sm text-white/40 leading-relaxed">3-minute personalised financial tips, bite-size literacy content, and chama management tools.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEALTH INDEX -->
+  <section class="py-20 lg:py-28 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#22C55E]/[0.02] via-transparent to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="flex justify-center fade-up">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center justify-center"><div class="w-64 h-64 rounded-full bg-[#22C55E]/10 blur-[80px]"></div></div>
+            <div class="relative w-64 h-64 sm:w-72 sm:h-72">
+              <svg viewBox="0 0 200 200" class="w-full h-full -rotate-90">
+                <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="12"/>
+                <circle cx="100" cy="100" r="85" fill="none" stroke="url(#bigRingGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="150" class="health-ring-progress" id="bigHealthRing"/>
+                <defs><linearGradient id="bigRingGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22C55E"/><stop offset="40%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-5xl sm:text-6xl font-bold">72</span>
+                <span class="text-sm text-white/40 mt-1">Healthy</span>
+                <span class="text-[10px] text-white/20 mt-0.5">out of 100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fade-up">
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#22C55E]/70 mb-4">ganji Health Index</p>
+          <h2 class="font-dm text-3xl sm:text-4xl font-light tracking-tight mb-5">Know your financial<br><span class="font-semibold">wellness at a glance</span></h2>
+          <p class="text-base text-white/40 leading-relaxed mb-8">Your personalised 0–100 financial wellness indicator. Not a credit score — an educational planning tool that shows you exactly where you stand across five pillars.</p>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#22C55E]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:wallet" width="18" class="text-[#22C55E]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Budgeting</span><span class="text-xs text-[#22C55E]">82%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#22C55E] rounded-full" style="width:82%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:piggy-bank" width="18" class="text-[#FBBF24]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Savings</span><span class="text-xs text-[#FBBF24]">65%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#FBBF24] rounded-full" style="width:65%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:credit-card" width="18" class="text-[#F97316]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Debt Management</span><span class="text-xs text-[#F97316]">58%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#F97316] rounded-full" style="width:58%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:shield" width="18" class="text-[#38BDF8]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Insurance Coverage</span><span class="text-xs text-[#38BDF8]">40%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#38BDF8] rounded-full" style="width:40%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:graduation-cap" width="18" class="text-[#a78bfa]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Financial Literacy</span><span class="text-xs text-[#a78bfa]">75%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#a78bfa] rounded-full" style="width:75%"></div></div></div></div>
+          </div>
+          <p class="text-xs text-white/25 leading-relaxed">The ganji Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VAULT & GOALS -->
+  <section class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="feature-card rounded-3xl p-8 lg:p-10 fade-up">
+          <div class="flex items-center gap-3 mb-6"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="24" class="text-[#22C55E]"></iconify-icon></div><div><h3 class="text-lg font-semibold">ganji Vault</h3><span class="text-[10px] font-bold tracking-widest uppercase text-[#22C55E]/70">Secure Savings</span></div></div>
+          <p class="text-sm text-white/40 leading-relaxed mb-8">Think of it as your digital safe. Set aside money you don't want to touch — for emergencies, planned expenses, or simply building discipline. Lock funds for days, weeks, or months.</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Lock funds for custom periods — no early withdrawal temptation</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Track vault balance with visual growth indicators</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">AI suggests how much to vault based on your income and goals</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Create multiple vaults for different purposes</p></div>
+          </div>
+        </div>
+        <div class="feature-card rounded-3xl p-8 lg:p-10 fade-up" style="transition-delay:0.1s">
+          <div class="flex items-center gap-3 mb-6"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FBBF24]/20 to-[#FBBF24]/5 flex items-center justify-center"><iconify-icon icon="lucide:target" width="24" class="text-[#FBBF24]"></iconify-icon></div><div><h3 class="text-lg font-semibold">ganji Goals</h3><span class="text-[10px] font-bold tracking-widest uppercase text-[#FBBF24]/70">Goal-Based Savings</span></div></div>
+          <p class="text-sm text-white/40 leading-relaxed mb-8">Turn wishes into plans. Set a target, a deadline, and let ganji break it down into weekly or monthly milestones. Watch your progress grow visually.</p>
+          <div class="space-y-4">
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Create unlimited goals — school fees, holiday, car, emergency fund</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Visual progress rings and milestone celebrations</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">AI-powered suggestions to reach your goals faster</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Automatic milestone alerts and gamification rewards</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section id="who" class="py-20 lg:py-28 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.01] to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#38BDF8]/70 mb-4">Who It's For</p>
+        <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Built for <span class="font-semibold">real Kenyans</span></h2>
+        <p class="text-base text-white/40 leading-relaxed">From first salary to generational wealth — ganji adapts to where you are.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="persona-card rounded-2xl p-6 fade-up">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#38BDF8] flex items-center justify-center text-sm font-bold mb-5">GW</div>
+          <h3 class="text-base font-semibold mb-0.5">Grace, 32</h3>
+          <p class="text-xs text-white/30 mb-4">Teacher · Nairobi · KES 45K/mo</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to budget, save for school fees, and understand life cover options.</p>
+          <div class="space-y-2">
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Overspends monthly</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No insurance</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#22C55E]/70 font-medium">Plus · KES 499/mo</span></p></div>
+        </div>
+        <div class="persona-card rounded-2xl p-6 fade-up" style="transition-delay:0.06s">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FBBF24] to-[#F97316] flex items-center justify-center text-sm font-bold text-black mb-5">BO</div>
+          <h3 class="text-base font-semibold mb-0.5">Brian, 22</h3>
+          <p class="text-xs text-white/30 mb-4">Student · Kisumu · HELB loan</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to learn about investing, understand MMFs, and manage HELB debt.</p>
+          <div class="space-y-2">
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No financial education</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Impulsive borrowing</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-white/50 font-medium">Free tier</span></p></div>
+        </div>
+        <div class="persona-card rounded-2xl p-6 fade-up" style="transition-delay:0.12s">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#F97316] to-[#f472b6] flex items-center justify-center text-sm font-bold mb-5">DM</div>
+          <h3 class="text-base font-semibold mb-0.5">David, 40</h3>
+          <p class="text-xs text-white/30 mb-4">SME Owner · KES 800K turnover</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Needs to separate business/personal finances and build cash flow discipline.</p>
+          <div class="space-y-2">
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Cash flow chaos</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No working capital plan</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#FBBF24]/70 font-medium">Business tier</span></p></div>
+        </div>
+        <div class="persona-card rounded-2xl p-6 fade-up" style="transition-delay:0.18s">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#38BDF8] flex items-center justify-center text-sm font-bold mb-5">AH</div>
+          <h3 class="text-base font-semibold mb-0.5">Amina, 48</h3>
+          <p class="text-xs text-white/30 mb-4">Senior Banker · KES 350K/mo</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to understand T-Bill rates, track savings goals, and plan for legacy.</p>
+          <div class="space-y-2">
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No centralised tracker</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No legacy plan</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#a78bfa]/70 font-medium">Wealth · KES 1,499/mo</span></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#38BDF8]/70 mb-4">Pricing</p>
+        <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Start free,<br><span class="font-semibold">upgrade when ready</span></h2>
+        <p class="text-base text-white/40 leading-relaxed">Genuine value before you pay a shilling. Cancel anytime via M-Pesa.</p>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="pricing-card rounded-2xl p-7 fade-up">
+          <div class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-4">Free</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 0</span></div>
+          <p class="text-sm text-white/30 mb-7">Forever free</p>
+          <a href="#waitlist" class="btn-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-white/70 mb-8">Join Waitlist</a>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>10 AI coach queries/day</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Basic budget (3 categories)</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Track up to 2 debts</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Savings rate display</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Health Index score</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Vault & Goals (basic)</div>
+          </div>
+        </div>
+        <div class="pricing-card pricing-popular rounded-2xl p-7 relative fade-up" style="transition-delay:0.08s">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="text-[10px] font-bold tracking-widest uppercase bg-[#22C55E] text-white px-4 py-1.5 rounded-full">Most Popular</span></div>
+          <div class="text-xs font-semibold tracking-widest uppercase text-[#22C55E]/70 mb-4">Plus</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 499</span><span class="text-sm text-white/30">/mo</span></div>
+          <p class="text-sm text-white/30 mb-7">Billed via M-Pesa</p>
+          <a href="#waitlist" class="btn-primary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold text-white mb-8"><iconify-icon icon="lucide:bell-ring" width="16"></iconify-icon>Join Waitlist</a>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon><strong>Unlimited</strong> AI coach queries</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Full budget (unlimited)</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Unlimited debt tracking</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>M-Pesa CSV analysis</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Health Index full breakdown</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Vault & Goals (unlimited)</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Monthly PDF reports</div>
+          </div>
+        </div>
+        <div class="pricing-card rounded-2xl p-7 fade-up" style="transition-delay:0.16s">
+          <div class="text-xs font-semibold tracking-widest uppercase text-[#FBBF24]/70 mb-4">Wealth</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 1,499</span><span class="text-sm text-white/30">/mo</span></div>
+          <p class="text-sm text-white/30 mb-7">Billed via M-Pesa</p>
+          <a href="#waitlist" class="btn-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-white/70 mb-8">Join Waitlist</a>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Everything in Plus</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Advanced AI wellness coaching</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>2 dedicated coach sessions/mo</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Estate planning education</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Legacy planning tools</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>White-glove onboarding</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 lg:py-28">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 fade-up">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#a78bfa]/70 mb-4">FAQ</p>
+        <h2 class="font-dm text-3xl sm:text-4xl font-light tracking-tight">Frequently asked <span class="font-semibold">questions</span></h2>
+      </div>
+      <div class="space-y-3 fade-up">
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">When will ganji launch?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">We're currently in active development and targeting a beta launch in the coming months. Join the waitlist to be among the first to get access — we'll notify you by SMS the moment it's ready.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Will it be on the Google Play Store?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Initially, we'll distribute via direct APK download from our website while we go through the Play Store onboarding process. The APK will be fully safe, scanned, and verified. Play Store listing will follow.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is ganji a licensed financial advisor?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">No. ganji provides general financial education and planning tools only. We do not provide licensed investment, insurance, or credit advice. Always consult a CMA, IRA, or CBK-licensed professional before making financial decisions.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">What are the Vault and Goals features?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Vault is a digital safe where you lock funds for set periods to build savings discipline. Goals lets you set savings targets (school fees, emergency fund, etc.) with visual progress tracking and AI-powered tips to reach them faster. Both are new features we're building for launch.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is my data safe?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Absolutely. We're registered with the ODPC, use AES-256 encryption at rest and TLS 1.3 in transit, and you can delete or download all your data anytime. We never sell your data. A full Data Protection Impact Assessment (DPIA) is completed before launch.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">What is the ganji Health Index?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">It's an educational financial wellness indicator scored 0–100 across five pillars: Budgeting, Savings, Debt Management, Insurance Coverage, and Financial Literacy. It is NOT a credit score, CRB report, or regulated rating.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is this just for salaried employees?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Not at all. ganji is for every Kenyan adult — salaried employees, SME owners, university students, freelancers, chama members. The AI adapts its guidance to your specific income situation and financial goals.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAITLIST CTA -->
+  <section id="waitlist" class="py-20 lg:py-32 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-b from-[#22C55E]/[0.04] via-[#FBBF24]/[0.02] to-transparent pointer-events-none"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#22C55E]/[0.06] blur-[150px] rounded-full pointer-events-none"></div>
+    </div>
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center fade-up">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 mb-8"><iconify-icon icon="lucide:bell-ring" width="14" class="text-[#22C55E]"></iconify-icon><span class="text-xs font-semibold text-[#22C55E] tracking-wide">JOIN THE WAITLIST · FREE</span></div>
+      <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Be among the first to<br><span class="font-semibold">get ganji</span></h2>
+      <p class="text-base text-white/40 leading-relaxed mb-10 max-w-lg mx-auto">We're building ganji for you. Leave your phone number and we'll SMS you the moment early access opens. No spam. Ever.</p>
+      <form id="waitlistFormFinal" class="mb-6">
+        <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <div class="relative flex-1">
+            <iconify-icon icon="lucide:phone" width="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
+            <input type="tel" id="phoneFinal" placeholder="2547XXXXXXXX" class="waitlist-input w-full pl-10 pr-4 py-4 rounded-xl text-sm text-white placeholder-white/25 font-medium" required>
+          </div>
+          <button type="submit" class="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-semibold text-white whitespace-nowrap shrink-0"><iconify-icon icon="lucide:arrow-right" width="18"></iconify-icon>Join</button>
+        </div>
+      </form>
+      <div id="final-success" class="hidden items-center justify-center gap-3 bg-[#22C55E]/10 border border-[#22C55E]/20 rounded-xl px-6 py-4 max-w-md mx-auto">
+        <iconify-icon icon="lucide:check-circle-2" width="22" class="text-[#22C55E] shrink-0"></iconify-icon>
+        <div class="text-left"><p class="text-sm font-medium text-[#22C55E]">You're on the list! 🎉</p><p class="text-xs text-white/40">We'll SMS you when ganji is ready.</p></div>
+      </div>
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/25 mt-8">
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/50"></iconify-icon> ODPC Registered</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/50"></iconify-icon> Number stays private</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/50"></iconify-icon> Android 8.0+</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trash-2" width="14" class="text-[#22C55E]/50"></iconify-icon> Delete data anytime</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/[0.06] pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+        <div class="sm:col-span-2 lg:col-span-1">
+          <span class="text-[1.65rem] font-extrabold tracking-tight leading-none inline-block mb-4"><span class="logo-g">g</span><span class="logo-a">a</span><span class="logo-n">n</span><span class="logo-j">j</span><span class="logo-i">i</span></span>
+          <p class="text-sm text-white/30 leading-relaxed mb-4">Kenya's first AI-powered personal finance coach. Built in Nairobi for every Kenyan.</p>
+          <p class="text-xs text-white/20 italic">"Weka Akili Pesa Yako"</p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Product</h4>
+          <div class="space-y-3">
+            <a href="#features" class="block text-sm text-white/40 hover:text-white transition-colors">Features</a>
+            <a href="#pricing" class="block text-sm text-white/40 hover:text-white transition-colors">Pricing</a>
+            <a href="#who" class="block text-sm text-white/40 hover:text-white transition-colors">Who It's For</a>
+            <a href="#waitlist" class="block text-sm text-white/40 hover:text-white transition-colors">Join Waitlist</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Legal & Compliance</h4>
+          <div class="space-y-3">
+            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Privacy Notice</a>
+            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Terms of Service</a>
+            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Data Protection</a>
+            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">AI Disclaimer</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Contact</h4>
+          <div class="space-y-3">
+            <a href="mailto:hello@ganji.app" class="block text-sm text-white/40 hover:text-white transition-colors">hello@ganji.app</a>
+            <p class="text-sm text-white/40">Nairobi, Kenya</p>
+            <div class="flex items-center gap-3 mt-4">
+              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:twitter" width="16" class="text-white/40"></iconify-icon></a>
+              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:instagram" width="16" class="text-white/40"></iconify-icon></a>
+              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:linkedin" width="16" class="text-white/40"></iconify-icon></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-white/[0.06] pt-8 mb-8">
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/20 mb-4">
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="12" class="text-[#22C55E]/40"></iconify-icon> ODPC Registered Data Controller</span>
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:file-text" width="12" class="text-[#FBBF24]/40"></iconify-icon> DPIA Completed</span>
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trademark" width="12" class="text-[#38BDF8]/40"></iconify-icon> KIPI Trademark Filed</span>
+        </div>
+        <p class="text-[11px] text-white/15 leading-relaxed max-w-3xl">ganji provides general financial education and planning tools only. Nothing in this app constitutes licensed investment, insurance, or credit advice. Always consult a CMA, IRA, or CBK-licensed professional before making financial decisions. The ganji Health Index is an educational planning tool only — it is not a credit score, CRB report, or regulated financial rating.</p>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-white/15">
+        <p>© 2025 ganji Technologies Ltd. All rights reserved.</p>
+        <p>Designed & Built in Nairobi, Kenya 🇰🇪</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WAITLIST BUTTON -->
+  <div id="floatingBtn" class="floating-btn fixed bottom-6 right-4 z-50 md:hidden">
+    <a href="#waitlist" class="btn-cta-nav flex items-center gap-2 pl-4 pr-5 py-3.5 rounded-full text-sm font-semibold text-white shadow-2xl"><iconify-icon icon="lucide:bell-ring" width="18"></iconify-icon>Join Waitlist</a>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    mobileMenuClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); fadeObserver.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    const bigRing = document.getElementById('bigHealthRing');
+    if (bigRing) {
+      const ringObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) { entry.target.classList.add('animated'); ringObserver.unobserve(entry.target); }
+        });
+      }, { threshold: 0.3 });
+      ringObserver.observe(bigRing);
+    }
+
+    const floatingBtn = document.getElementById('floatingBtn');
+    window.addEventListener('scroll', () => { floatingBtn.classList.toggle('show', window.scrollY > 600); }, { passive: true });
+
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('active'); i.querySelector('.faq-answer').classList.remove('open'); });
+        if (!isActive) { item.classList.add('active'); answer.classList.add('open'); }
+      });
+    });
+
+    function handleWaitlistSubmit(formId, phoneId, successId) {
+      const form = document.getElementById(formId);
+      const phone = document.getElementById(phoneId);
+      const success = document.getElementById(successId);
+      if (!form) return;
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const number = phone.value.trim();
+        if (number.length < 10) {
+          phone.style.borderColor = 'rgba(239,68,68,0.5)';
+          phone.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
+          setTimeout(() => { phone.style.borderColor = ''; phone.style.boxShadow = ''; }, 2000);
+          return;
+        }
+        form.style.display = 'none';
+        success.style.display = 'flex';
+        success.classList.remove('hidden');
+      });
+    }
+    handleWaitlistSubmit('waitlistFormHero', 'phoneHero', 'hero-success');
+    handleWaitlistSubmit('waitlistFormFinal', 'phoneFinal', 'final-success');
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) { e.preventDefault(); window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); }
+      });
+    });
+  </script>
+</body>
+</html>
