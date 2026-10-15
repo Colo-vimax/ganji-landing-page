@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ganji — AI-Powered Personal Finance Coach | Coming Soon</title>
-  <meta name="description" content="ganji is Kenya's first AI-powered personal finance coach. Budget, save, track debt, and build wealth — in English and Swahili. Join the waitlist.">
+  <meta name="description" content="Ganji helps Kenyans track spending, budgets, loans, savings and assets, with optional AI coaching in English and Swahili. Join the early-access waitlist.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,10 +117,10 @@
       width: 80px; height: 24px; background: #1a1a1a; border-radius: 12px; z-index: 10;
     }
     .health-ring-progress {
-      stroke-dasharray: 283; stroke-dashoffset: 283;
+      stroke-dasharray: 534; stroke-dashoffset: 534;
       transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .health-ring-progress.animated { stroke-dashoffset: 79; }
+    .health-ring-progress.animated { stroke-dashoffset: 150; }
     @keyframes marquee {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -158,13 +158,13 @@
       transform: translateY(100px); opacity: 0; transition: all 0.4s ease;
     }
     .floating-btn.show { transform: translateY(0); opacity: 1; }
-    @keyframes vault-shimmer {
+    @keyframes savings-shimmer {
       0% { background-position: -200% center; }
       100% { background-position: 200% center; }
     }
-    .vault-shimmer {
+    .savings-shimmer {
       background: linear-gradient(90deg, transparent, rgba(34,197,94,0.15), transparent);
-      background-size: 200% 100%; animation: vault-shimmer 3s ease-in-out infinite;
+      background-size: 200% 100%; animation: savings-shimmer 3s ease-in-out infinite;
     }
     .waitlist-input {
       background: rgba(255,255,255,0.06);
@@ -226,25 +226,44 @@
       background: rgba(255,255,255,0.1);
       border-color: rgba(255,255,255,0.2);
     }
+    .info-dialog {
+      margin: auto; width: min(95vw, 720px); max-height: 85vh;
+      padding: 2rem; border-radius: 1.5rem;
+      color: white; background: #111; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .info-dialog::backdrop { background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); }
+    button:focus-visible, a:focus-visible { outline: 2px solid #22C55E; outline-offset: 4px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .fade-up { opacity: 1; transform: none; }
+      .health-ring-progress { stroke-dashoffset: 150; }
+    }
   </style>
 </head>
 
 <body class="bg-[#0a0a0a] text-white font-inter antialiased overflow-x-hidden">
 
   <!-- Google Form Modal -->
-  <div id="formModal" class="form-modal-overlay">
+  <div id="formModal" class="form-modal-overlay" role="dialog" aria-modal="true" aria-label="Join the Ganji waitlist" inert>
     <div class="form-modal-box">
-      <button id="formModalClose" class="form-modal-close">
+      <button id="formModalClose" class="form-modal-close" aria-label="Close waitlist">
         <iconify-icon icon="lucide:x" width="18" class="text-white/70"></iconify-icon>
       </button>
       <iframe
         id="formIframe"
+        title="Ganji early-access Google Form"
         src="about:blank"
         data-src="https://docs.google.com/forms/d/e/1FAIpQLSeC2G0ApXqTzf7Qcn-k9QmZ8-izwcnGy5I12vYkpWZX8uMW4A/viewform?embedded=true"
         loading="lazy"
       ></iframe>
     </div>
   </div>
+
+  <dialog id="infoDialog" class="info-dialog" aria-labelledby="infoTitle">
+    <form method="dialog" class="flex justify-end"><button class="btn-secondary px-4 py-2 rounded-xl text-sm">Close</button></form>
+    <h2 id="infoTitle" class="font-dm text-2xl font-semibold mt-2 mb-3"></h2>
+    <div id="infoBody" class="space-y-5 text-sm text-white/60 leading-relaxed"></div>
+  </dialog>
 
   <!-- NAVBAR -->
   <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-glass">
@@ -318,7 +337,7 @@
             <span class="font-semibold bg-gradient-to-r from-[#22C55E] via-[#FBBF24] to-[#38BDF8] bg-clip-text text-transparent"> AI coach</span>
           </h1>
           <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-4 max-w-md font-light">
-            The first AI-powered personal finance coach built for Kenyans. Budget, save, eliminate debt, and build wealth — conversationally, in English and Swahili.
+            A personal finance companion built for Kenyans. Track spending, plan budgets, record savings and loans, and ask an AI coach — in English and Swahili.
           </p>
           <p class="text-sm text-white/30 mb-10 italic">"Weka Akili Pesa Yako"</p>
 
@@ -326,21 +345,20 @@
           <div id="hero-waitlist" class="mb-6">
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
-                <iconify-icon icon="lucide:phone" width="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
-                <input type="tel" id="phoneHero" placeholder="Enter your phone number" class="waitlist-input w-full pl-10 pr-4 py-4 rounded-xl text-sm text-white placeholder-white/25 font-medium">
+                <div class="waitlist-input flex items-center gap-3 px-4 py-4 rounded-xl text-sm text-white/50"><iconify-icon icon="lucide:bell-ring" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Get early access updates</div>
               </div>
               <button onclick="openFormModal()" class="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-semibold text-white whitespace-nowrap shrink-0">
                 <iconify-icon icon="lucide:bell-ring" width="18"></iconify-icon>
                 Join Waitlist
               </button>
             </div>
-            <p class="text-[11px] text-white/20 mt-2.5 text-center sm:text-left">Takes 30 seconds · Your number stays private</p>
+            <p class="text-[11px] text-white/20 mt-2.5 text-center sm:text-left">Join through a Google Form · Share your details there</p>
           </div>
 
           <div class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-white/30">
-            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/60"></iconify-icon> ODPC Registered</span>
-            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/60"></iconify-icon> Your number stays private</span>
-            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/60"></iconify-icon> Android 8.0+</span>
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/60"></iconify-icon> English &amp; Swahili</span>
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/60"></iconify-icon> Optional AI coaching</span>
+            <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/60"></iconify-icon> Android APK at launch</span>
           </div>
         </div>
 
@@ -355,10 +373,11 @@
           <div class="absolute -right-2 bottom-32 float-card-delay hidden lg:block">
             <div class="bg-white/[0.06] backdrop-blur-md border border-white/[0.1] rounded-2xl px-4 py-3 flex items-center gap-3">
               <div class="w-9 h-9 rounded-xl bg-[#FBBF24]/15 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="18" class="text-[#FBBF24]"></iconify-icon></div>
-              <div><div class="text-xs text-white/40">Vault Balance</div><div class="text-sm font-semibold text-[#FBBF24]">KES 20,000</div></div>
+              <div><div class="text-xs text-white/40">Recorded Emergency Fund</div><div class="text-sm font-semibold text-[#FBBF24]">KES 20,000</div></div>
             </div>
           </div>
-          <div class="phone-frame w-[272px] sm:w-[300px]">
+          <div class="flex flex-col items-center max-w-sm">
+          <div class="phone-frame w-[272px] sm:w-[300px]" aria-hidden="true">
             <div class="phone-screen aspect-[9/19.5] relative">
               <div class="phone-notch"></div>
               <div class="absolute inset-0 flex flex-col items-center justify-center z-20 bg-[#0d0d0d]/70 backdrop-blur-sm">
@@ -387,7 +406,7 @@
                 <div class="grid grid-cols-3 gap-2 mb-5">
                   <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:wallet" width="14" class="text-[#22C55E] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Budget</p><p class="text-xs font-semibold">KES 12.4K</p></div>
                   <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:piggy-bank" width="14" class="text-[#FBBF24] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Savings</p><p class="text-xs font-semibold">KES 45K</p></div>
-                  <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:landmark" width="14" class="text-[#F97316] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Vault</p><p class="text-xs font-semibold">KES 20K</p></div>
+                  <div class="bg-white/[0.04] rounded-xl p-2.5 text-center"><iconify-icon icon="lucide:landmark" width="14" class="text-[#F97316] mb-1"></iconify-icon><p class="text-[10px] text-white/30">Assets</p><p class="text-xs font-semibold">KES 20K</p></div>
                 </div>
                 <div class="mt-auto bg-white/[0.04] border border-white/[0.08] rounded-2xl p-3 flex items-center gap-3">
                   <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#22C55E] to-[#38BDF8] flex items-center justify-center shrink-0"><iconify-icon icon="lucide:bot" width="14" class="text-white"></iconify-icon></div>
@@ -396,13 +415,15 @@
                 </div>
                 <div class="flex justify-around items-center mt-3 pt-3 border-t border-white/[0.05]">
                   <iconify-icon icon="lucide:layout-dashboard" width="18" class="text-[#22C55E]"></iconify-icon>
-                  <iconify-icon icon="lucide:message-circle" width="18" class="text-white/25"></iconify-icon>
-                  <iconify-icon icon="lucide:target" width="18" class="text-white/25"></iconify-icon>
-                  <iconify-icon icon="lucide:lock" width="18" class="text-white/25"></iconify-icon>
-                  <iconify-icon icon="lucide:user" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:activity" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:wallet" width="18" class="text-white/25"></iconify-icon>
+                  <iconify-icon icon="lucide:chart-pie" width="18" class="text-white/25"></iconify-icon>
                 </div>
               </div>
             </div>
+          </div>
+          <p class="text-xs text-white/40 text-center leading-relaxed mt-6">Illustrative preview · Sample figures · Premium score</p>
+          <p class="text-[11px] text-white/35 text-center leading-relaxed mt-2">The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution.</p>
           </div>
         </div>
       </div>
@@ -413,29 +434,29 @@
   <section class="relative border-y border-white/[0.05] py-5 overflow-hidden bg-white/[0.01]">
     <div class="flex whitespace-nowrap">
       <div class="marquee-track flex items-center gap-10 shrink-0 px-5">
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> 80% of Kenyans have no financial advisor</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> Understand your M-Pesa spending</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> &lt;3% have life insurance</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> Keep coverage records together</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> 22M adults, 9M on smartphones</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> Plan budgets in English or Swahili</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Mobile loan debt traps worsening</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Keep track of loan repayments</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Most salaries don't last the month</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Make room for savings goals</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Zero financial literacy in schools</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Build an emergency savings plan</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> 80% of Kenyans have no financial advisor</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:alert-triangle" width="16" class="text-[#F97316]/40"></iconify-icon> Understand your M-Pesa spending</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> &lt;3% have life insurance</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:percent" width="16" class="text-[#F97316]/40"></iconify-icon> Keep coverage records together</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> 22M adults, 9M on smartphones</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:users" width="16" class="text-[#F97316]/40"></iconify-icon> Plan budgets in English or Swahili</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Mobile loan debt traps worsening</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:trending-down" width="16" class="text-[#F97316]/40"></iconify-icon> Keep track of loan repayments</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Most salaries don't last the month</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:wallet" width="16" class="text-[#F97316]/40"></iconify-icon> Make room for savings goals</span>
         <span class="text-white/10">·</span>
-        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Zero financial literacy in schools</span>
+        <span class="flex items-center gap-2 text-sm text-white/25"><iconify-icon icon="lucide:graduation-cap" width="16" class="text-[#F97316]/40"></iconify-icon> Build an emergency savings plan</span>
       </div>
     </div>
   </section>
@@ -447,27 +468,27 @@
         <div class="fade-up">
           <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#F97316]/70 mb-4">The Problem</p>
           <h2 class="font-dm text-3xl sm:text-4xl lg:text-[2.75rem] font-light tracking-tight mb-6 leading-tight">Millions of Kenyans are<br><span class="font-semibold">flying blind with money</span></h2>
-          <p class="text-base text-white/40 leading-relaxed mb-8">No budget. No plan. No financial education. Just a salary that vanishes by the 15th and a growing stack of mobile loans. This isn't a personal failure — it's a systemic gap that nobody is filling with the right tool.</p>
+          <p class="text-base text-white/40 leading-relaxed mb-8">Everyday spending, loan repayments and savings goals can be hard to keep together. Ganji brings your records into one place so you can see what you have and plan your next step.</p>
           <div class="space-y-5">
             <div class="flex items-start gap-4">
               <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:user-x" width="18" class="text-[#F97316]"></iconify-icon></div>
-              <div><p class="text-sm font-medium mb-1">No access to a financial advisor</p><p class="text-sm text-white/35">Over 80% of Kenyans cannot afford or access qualified personal finance guidance.</p></div>
+              <div><p class="text-sm font-medium mb-1">Scattered financial records</p><p class="text-sm text-white/35">Bring M-Pesa spending, budgets, loans and asset records into a clearer view.</p></div>
             </div>
             <div class="flex items-start gap-4">
               <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:calendar-x" width="18" class="text-[#F97316]"></iconify-icon></div>
-              <div><p class="text-sm font-medium mb-1">Salaries don't last the month</p><p class="text-sm text-white/35">Most salaried Kenyans exhaust their pay before month-end with zero structured budgeting.</p></div>
+              <div><p class="text-sm font-medium mb-1">Hard to follow a budget</p><p class="text-sm text-white/35">Set allocations, record expenses and compare your plan with what you spend.</p></div>
             </div>
             <div class="flex items-start gap-4">
               <div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0 mt-0.5"><iconify-icon icon="lucide:shield-off" width="18" class="text-[#F97316]"></iconify-icon></div>
-              <div><p class="text-sm font-medium mb-1">Insurance penetration below 3%</p><p class="text-sm text-white/35">Life and medical cover remains inaccessible to the vast majority of the population.</p></div>
+              <div><p class="text-sm font-medium mb-1">Savings and cover need a plan</p><p class="text-sm text-white/35">Record an emergency target and existing coverage, then use reminders to keep them in view.</p></div>
             </div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4 fade-up">
-          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">22M</div><p class="text-sm text-white/35">Kenyan adults (18–65)</p></div>
-          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">80%</div><p class="text-sm text-white/35">No financial advisor</p></div>
-          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">&lt;3%</div><p class="text-sm text-white/35">Have life insurance</p></div>
-          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">9M</div><p class="text-sm text-white/35">Smartphone users</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">4</div><p class="text-sm text-white/35">Main app tabs</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">5</div><p class="text-sm text-white/35">Fedha Health pillars · Premium</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">2</div><p class="text-sm text-white/35">Languages: English &amp; Swahili</p></div>
+          <div class="feature-card rounded-2xl p-6 text-center"><div class="stat-number text-3xl sm:text-4xl font-bold mb-2">3</div><p class="text-sm text-white/35">Saved budgets on Free</p></div>
         </div>
       </div>
     </div>
@@ -479,60 +500,88 @@
       <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
         <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#22C55E]/70 mb-4">What We're Building</p>
         <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Everything you need to<br><span class="font-semibold">master your money</span></h2>
-        <p class="text-base text-white/40 leading-relaxed">Eight intelligent modules working together to give you complete financial clarity — all in one app.</p>
+        <p class="text-base text-white/40 leading-relaxed">Spending, budgets, loans, assets and wellbeing tools in one app. AI coaching and payment access are being prepared for public launch.</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="feature-card rounded-2xl p-6 fade-up">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:message-circle" width="22" class="text-[#22C55E]"></iconify-icon></div>
           <h3 class="text-base font-semibold mb-2">AI Finance Coach</h3>
-          <p class="text-sm text-white/40 leading-relaxed">Ask anything about your finances in English or Swahili. ganji remembers your context across conversations.</p>
+          <p class="text-sm text-white/40 leading-relaxed">Ask financial education questions in English or Swahili. With your consent, recent chat and aggregate figures help give context. Verified account required.</p>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.05s">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#38BDF8]/20 to-[#38BDF8]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:pie-chart" width="22" class="text-[#38BDF8]"></iconify-icon></div>
           <h3 class="text-base font-semibold mb-2">Smart Budgeting</h3>
-          <p class="text-sm text-white/40 leading-relaxed">5-minute setup with AI-generated 50/30/20 budgets. Automatic categorisation and spending alerts.</p>
+          <p class="text-sm text-white/40 leading-relaxed">Create 50/30/20 or custom budgets, track expenses and opt into local budget reminders. Free includes three saved budgets.</p>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.1s">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#F97316]/20 to-[#F97316]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:credit-card" width="22" class="text-[#F97316]"></iconify-icon></div>
-          <h3 class="text-base font-semibold mb-2">Debt Manager</h3>
-          <p class="text-sm text-white/40 leading-relaxed">Track all debts in one place. AI suggests avalanche vs snowball strategies. See your debt-free date.</p>
+          <h3 class="text-base font-semibold mb-2">Loans &amp; Debts</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Keep loans and debts together, record repayments and check outstanding balances and due dates.</p>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.15s">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FBBF24]/20 to-[#FBBF24]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:trending-up" width="22" class="text-[#FBBF24]"></iconify-icon></div>
-          <h3 class="text-base font-semibold mb-2">Savings Education</h3>
-          <p class="text-sm text-white/40 leading-relaxed">Learn about T-Bills, Bonds, and MMFs with live CBK rates. Plain-language guides in English and Swahili.</p>
+          <h3 class="text-base font-semibold mb-2">Portfolio Tracking</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Record holdings, values and cash movements. See allocation and net-worth history as you build your own records.</p>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up relative overflow-hidden">
-          <div class="vault-shimmer absolute inset-0 rounded-2xl pointer-events-none"></div>
+          <div class="savings-shimmer absolute inset-0 rounded-2xl pointer-events-none"></div>
           <div class="relative">
             <div class="flex items-center gap-2 mb-5">
               <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#22C55E]/25 to-[#FBBF24]/10 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="22" class="text-[#22C55E]"></iconify-icon></div>
               <span class="text-[10px] font-bold tracking-widest uppercase bg-[#22C55E]/15 text-[#22C55E] px-2 py-0.5 rounded-full">New</span>
             </div>
-            <h3 class="text-base font-semibold mb-2">ganji Vault</h3>
-            <p class="text-sm text-white/40 leading-relaxed">A secure digital safe. Lock funds for set periods, track growth, and build savings discipline.</p>
+            <h3 class="text-base font-semibold mb-2">Emergency Savings</h3>
+            <p class="text-sm text-white/40 leading-relaxed">Record your emergency balance, essential expenses and target months. Explore growth using a return assumption you choose.</p>
           </div>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up relative overflow-hidden" style="transition-delay:0.05s">
-          <div class="vault-shimmer absolute inset-0 rounded-2xl pointer-events-none" style="animation-delay:1.5s"></div>
+          <div class="savings-shimmer absolute inset-0 rounded-2xl pointer-events-none" style="animation-delay:1.5s"></div>
           <div class="relative">
             <div class="flex items-center gap-2 mb-5">
               <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FBBF24]/25 to-[#F97316]/10 flex items-center justify-center"><iconify-icon icon="lucide:target" width="22" class="text-[#FBBF24]"></iconify-icon></div>
               <span class="text-[10px] font-bold tracking-widest uppercase bg-[#FBBF24]/15 text-[#FBBF24] px-2 py-0.5 rounded-full">New</span>
             </div>
             <h3 class="text-base font-semibold mb-2">Goals Tracker</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Set savings goals — school fees, emergency fund, holiday. Visual progress with AI-powered tips.</p>
+            <p class="text-sm text-white/40 leading-relaxed">Set target amounts and dates, link holdings and follow progress. Free includes three saved goals; Premium removes that cap.</p>
           </div>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.1s">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#a78bfa]/20 to-[#a78bfa]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:shield" width="22" class="text-[#a78bfa]"></iconify-icon></div>
-          <h3 class="text-base font-semibold mb-2">Insurance Info Centre</h3>
-          <p class="text-sm text-white/40 leading-relaxed">Understand life, medical, and cover options. General comparisons of Jubilee, Britam, AAR and more.</p>
+          <h3 class="text-base font-semibold mb-2">Protection Centre</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Record existing medical, life and other cover, providers and review dates. Opt into local renewal reminders.</p>
         </div>
         <div class="feature-card rounded-2xl p-6 fade-up" style="transition-delay:0.15s">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#f472b6]/20 to-[#f472b6]/5 flex items-center justify-center mb-5"><iconify-icon icon="lucide:heart-pulse" width="22" class="text-[#f472b6]"></iconify-icon></div>
-          <h3 class="text-base font-semibold mb-2">Daily Insights</h3>
-          <p class="text-sm text-white/40 leading-relaxed">3-minute personalised financial tips, bite-size literacy content, and chama management tools.</p>
+          <h3 class="text-base font-semibold mb-2">Activity &amp; Insights</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Import M-Pesa SMS on Android with permission. Explore spending, fees and comparisons over a date range you choose.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap" class="py-16 border-y border-white/[0.05] bg-white/[0.01]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10 fade-up">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#FBBF24]/70 mb-4">On the Roadmap</p>
+        <h2 class="font-dm text-3xl sm:text-4xl font-light tracking-tight mb-4">More ways to <span class="font-semibold">keep track</span></h2>
+        <p class="text-sm text-white/40 leading-relaxed">Planned additions beyond the current app. These are not available yet; release dates are still to be confirmed.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="feature-card rounded-2xl p-6 fade-up">
+          <div class="flex items-center justify-between mb-5"><iconify-icon icon="lucide:message-square-plus" width="22" class="text-[#FBBF24]"></iconify-icon><span class="text-[10px] font-bold tracking-widest uppercase text-[#FBBF24]/70">Planned</span></div>
+          <h3 class="text-base font-semibold mb-2">Incoming M-Pesa Updates</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Planned: capture new M-Pesa messages as they arrive on Android. The current app imports the inbox when you choose.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up">
+          <div class="flex items-center justify-between mb-5"><iconify-icon icon="lucide:square-pen" width="22" class="text-[#FBBF24]"></iconify-icon><span class="text-[10px] font-bold tracking-widest uppercase text-[#FBBF24]/70">Planned</span></div>
+          <h3 class="text-base font-semibold mb-2">Manual Transaction Entry</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Planned: enter or paste transactions, including on iOS. The current iOS build uses example transactions because it cannot read SMS.</p>
+        </div>
+        <div class="feature-card rounded-2xl p-6 fade-up">
+          <div class="flex items-center justify-between mb-5"><iconify-icon icon="lucide:cloud-download" width="22" class="text-[#FBBF24]"></iconify-icon><span class="text-[10px] font-bold tracking-widest uppercase text-[#FBBF24]/70">Planned</span></div>
+          <h3 class="text-base font-semibold mb-2">Backup &amp; Restore</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Planned: financial-record backup, cross-device sync and JSON import/restore. JSON export is available; account recovery currently restores membership only.</p>
         </div>
       </div>
     </div>
@@ -561,44 +610,45 @@
           </div>
         </div>
         <div class="fade-up">
-          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#22C55E]/70 mb-4">ganji Health Index</p>
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#22C55E]/70 mb-4">Fedha Health Index</p>
           <h2 class="font-dm text-3xl sm:text-4xl font-light tracking-tight mb-5">Know your financial<br><span class="font-semibold">wellness at a glance</span></h2>
-          <p class="text-base text-white/40 leading-relaxed mb-8">Your personalised 0–100 financial wellness indicator. Not a credit score — an educational planning tool that shows you exactly where you stand across five pillars.</p>
+          <p class="text-base text-white/40 leading-relaxed mb-8">Premium includes an educational 0–100 score from active transactions and your saved inputs, plus assessment, pillar breakdown and PNG sharing. Demo transactions can affect the score before SMS import and on iOS.</p>
+          <p class="text-xs text-white/40 mb-4">Illustrative Premium score · Sample pillar scores, weighted as shown</p>
           <div class="space-y-4 mb-8">
-            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#22C55E]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:wallet" width="18" class="text-[#22C55E]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Budgeting</span><span class="text-xs text-[#22C55E]">82%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#22C55E] rounded-full" style="width:82%"></div></div></div></div>
-            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:piggy-bank" width="18" class="text-[#FBBF24]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Savings</span><span class="text-xs text-[#FBBF24]">65%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#FBBF24] rounded-full" style="width:65%"></div></div></div></div>
-            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:credit-card" width="18" class="text-[#F97316]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Debt Management</span><span class="text-xs text-[#F97316]">58%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#F97316] rounded-full" style="width:58%"></div></div></div></div>
-            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:shield" width="18" class="text-[#38BDF8]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Insurance Coverage</span><span class="text-xs text-[#38BDF8]">40%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#38BDF8] rounded-full" style="width:40%"></div></div></div></div>
-            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:graduation-cap" width="18" class="text-[#a78bfa]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center mb-1.5"><span class="text-sm font-medium">Financial Literacy</span><span class="text-xs text-[#a78bfa]">75%</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#a78bfa] rounded-full" style="width:75%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#22C55E]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:piggy-bank" width="18" class="text-[#22C55E]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center gap-3 mb-1.5"><span class="text-sm font-medium">Savings Rate <span class="text-xs text-white/35">· 30%</span></span><span class="text-xs text-[#22C55E]">80/100</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#22C55E] rounded-full" style="width:80%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:wallet" width="18" class="text-[#FBBF24]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center gap-3 mb-1.5"><span class="text-sm font-medium">Budgeting <span class="text-xs text-white/35">· 20%</span></span><span class="text-xs text-[#FBBF24]">80/100</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#FBBF24] rounded-full" style="width:80%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:credit-card" width="18" class="text-[#F97316]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center gap-3 mb-1.5"><span class="text-sm font-medium">Debt Control <span class="text-xs text-white/35">· 20%</span></span><span class="text-xs text-[#F97316]">60/100</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#F97316] rounded-full" style="width:60%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:life-buoy" width="18" class="text-[#38BDF8]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center gap-3 mb-1.5"><span class="text-sm font-medium">Emergency Buffer <span class="text-xs text-white/35">· 20%</span></span><span class="text-xs text-[#38BDF8]">60/100</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#38BDF8] rounded-full" style="width:60%"></div></div></div></div>
+            <div class="flex items-center gap-4"><div class="w-10 h-10 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center shrink-0"><iconify-icon icon="lucide:shield" width="18" class="text-[#a78bfa]"></iconify-icon></div><div class="flex-1"><div class="flex justify-between items-center gap-3 mb-1.5"><span class="text-sm font-medium">Protection <span class="text-xs text-white/35">· 10%</span></span><span class="text-xs text-[#a78bfa]">80/100</span></div><div class="h-1.5 bg-white/[0.06] rounded-full overflow-hidden"><div class="h-full bg-[#a78bfa] rounded-full" style="width:80%"></div></div></div></div>
           </div>
-          <p class="text-xs text-white/25 leading-relaxed">The ganji Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating.</p>
+          <p class="text-xs text-white/25 leading-relaxed">The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- VAULT & GOALS -->
+  <!-- SAVINGS & GOALS -->
   <section class="py-20 lg:py-28">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-6">
         <div class="feature-card rounded-3xl p-8 lg:p-10 fade-up">
-          <div class="flex items-center gap-3 mb-6"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="24" class="text-[#22C55E]"></iconify-icon></div><div><h3 class="text-lg font-semibold">ganji Vault</h3><span class="text-[10px] font-bold tracking-widest uppercase text-[#22C55E]/70">Secure Savings</span></div></div>
-          <p class="text-sm text-white/40 leading-relaxed mb-8">Think of it as your digital safe. Set aside money you don't want to touch — for emergencies, planned expenses, or simply building discipline. Lock funds for days, weeks, or months.</p>
+          <div class="flex items-center gap-3 mb-6"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 flex items-center justify-center"><iconify-icon icon="lucide:lock" width="24" class="text-[#22C55E]"></iconify-icon></div><div><h3 class="text-lg font-semibold">Emergency Savings</h3><span class="text-[10px] font-bold tracking-widest uppercase text-[#22C55E]/70">Your Emergency Plan</span></div></div>
+          <p class="text-sm text-white/40 leading-relaxed mb-8">Build a clearer emergency plan from the balance you record, essential monthly expenses and a target of one to twelve months. These are planning records; Ganji does not hold or lock your money.</p>
           <div class="space-y-4">
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Lock funds for custom periods — no early withdrawal temptation</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Track vault balance with visual growth indicators</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">AI suggests how much to vault based on your income and goals</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Create multiple vaults for different purposes</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Save your emergency balance and essential monthly expenses</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Choose a target of one to twelve months of essential expenses</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Illustrate growth with your own assumed annual return</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#22C55E] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Update your plan as your circumstances change</p></div>
           </div>
         </div>
         <div class="feature-card rounded-3xl p-8 lg:p-10 fade-up" style="transition-delay:0.1s">
           <div class="flex items-center gap-3 mb-6"><div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FBBF24]/20 to-[#FBBF24]/5 flex items-center justify-center"><iconify-icon icon="lucide:target" width="24" class="text-[#FBBF24]"></iconify-icon></div><div><h3 class="text-lg font-semibold">ganji Goals</h3><span class="text-[10px] font-bold tracking-widest uppercase text-[#FBBF24]/70">Goal-Based Savings</span></div></div>
-          <p class="text-sm text-white/40 leading-relaxed mb-8">Turn wishes into plans. Set a target, a deadline, and let ganji break it down into weekly or monthly milestones. Watch your progress grow visually.</p>
+          <p class="text-sm text-white/40 leading-relaxed mb-8">Set an amount and target date for school fees, a holiday or an emergency fund. Link a holding and follow your recorded progress in the Portfolio tab.</p>
           <div class="space-y-4">
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Create unlimited goals — school fees, holiday, car, emergency fund</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Visual progress rings and milestone celebrations</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">AI-powered suggestions to reach your goals faster</p></div>
-            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Automatic milestone alerts and gamification rewards</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Save three goals on Free; add more with active Premium</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">See progress towards each recorded target</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Link asset holdings to the goals they support</p></div>
+            <div class="flex items-start gap-3"><iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#FBBF24] mt-0.5 shrink-0"></iconify-icon><p class="text-sm text-white/50">Opt into local reminders before a goal target date</p></div>
           </div>
         </div>
       </div>
@@ -624,13 +674,13 @@
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Overspends monthly</span>
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No insurance</span>
           </div>
-          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#22C55E]/70 font-medium">Plus · KES 499/mo</span></p></div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#22C55E]/70 font-medium">Premium · KES 300/mo</span></p></div>
         </div>
         <div class="persona-card rounded-2xl p-6 fade-up" style="transition-delay:0.06s">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FBBF24] to-[#F97316] flex items-center justify-center text-sm font-bold text-black mb-5">BO</div>
           <h3 class="text-base font-semibold mb-0.5">Brian, 22</h3>
           <p class="text-xs text-white/30 mb-4">Student · Kisumu · HELB loan</p>
-          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to learn about investing, understand MMFs, and manage HELB debt.</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to track savings goals, record holdings, and manage HELB debt.</p>
           <div class="space-y-2">
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No financial education</span>
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Impulsive borrowing</span>
@@ -641,23 +691,23 @@
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#F97316] to-[#f472b6] flex items-center justify-center text-sm font-bold mb-5">DM</div>
           <h3 class="text-base font-semibold mb-0.5">David, 40</h3>
           <p class="text-xs text-white/30 mb-4">SME Owner · KES 800K turnover</p>
-          <p class="text-sm text-white/45 leading-relaxed mb-4">Needs to separate business/personal finances and build cash flow discipline.</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants a clearer personal budget alongside loan and savings records.</p>
           <div class="space-y-2">
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Cash flow chaos</span>
-            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No working capital plan</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Repayments hard to track</span>
           </div>
-          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#FBBF24]/70 font-medium">Business tier</span></p></div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#FBBF24]/70 font-medium">Premium · KES 300/mo</span></p></div>
         </div>
         <div class="persona-card rounded-2xl p-6 fade-up" style="transition-delay:0.18s">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#a78bfa] to-[#38BDF8] flex items-center justify-center text-sm font-bold mb-5">AH</div>
           <h3 class="text-base font-semibold mb-0.5">Amina, 48</h3>
           <p class="text-xs text-white/30 mb-4">Senior Banker · KES 350K/mo</p>
-          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to understand T-Bill rates, track savings goals, and plan for legacy.</p>
+          <p class="text-sm text-white/45 leading-relaxed mb-4">Wants to track asset values, savings goals, and existing insurance cover.</p>
           <div class="space-y-2">
             <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No centralised tracker</span>
-            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> No legacy plan</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] text-[#F97316]/80 bg-[#F97316]/10 px-2.5 py-1 rounded-full"><iconify-icon icon="lucide:alert-circle" width="11"></iconify-icon> Cover needs reviewing</span>
           </div>
-          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#a78bfa]/70 font-medium">Wealth · KES 1,499/mo</span></p></div>
+          <div class="mt-4 pt-4 border-t border-white/[0.06]"><p class="text-[11px] text-white/25">Best fit: <span class="text-[#a78bfa]/70 font-medium">Premium · KES 300/mo</span></p></div>
         </div>
       </div>
     </div>
@@ -669,54 +719,70 @@
       <div class="text-center max-w-2xl mx-auto mb-16 fade-up">
         <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[#38BDF8]/70 mb-4">Pricing</p>
         <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Start free,<br><span class="font-semibold">upgrade when ready</span></h2>
-        <p class="text-base text-white/40 leading-relaxed">Genuine value before you pay a shilling. Cancel anytime via M-Pesa.</p>
+        <p class="text-base text-white/40 leading-relaxed">Genuine value before you pay a shilling. Choose the Premium term that works for you.</p>
       </div>
-      <div class="grid lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <div class="pricing-card rounded-2xl p-7 fade-up">
+      <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 mx-auto">
+        <div class="pricing-card rounded-2xl p-7 relative fade-up">
           <div class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-4">Free</div>
-          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 0</span></div>
-          <p class="text-sm text-white/30 mb-7">Forever free</p>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold whitespace-nowrap">KES 0</span></div>
+          <p class="text-sm text-white/30 mb-7 min-h-[2.5rem]">Forever free</p>
           <button onclick="openFormModal()" class="btn-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-white/70 mb-8">Join Waitlist</button>
           <div class="space-y-3">
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>10 AI coach queries/day</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Basic budget (3 categories)</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Track up to 2 debts</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Savings rate display</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Health Index score</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Vault & Goals (basic)</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>3 AI exchanges for life</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>3 saved budgets</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>3 holdings &amp; 3 goals</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>3 months of net-worth history</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>M-Pesa SMS import (Android)</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Loans, fees &amp; data export</div>
           </div>
         </div>
         <div class="pricing-card pricing-popular rounded-2xl p-7 relative fade-up" style="transition-delay:0.08s">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="text-[10px] font-bold tracking-widest uppercase bg-[#22C55E] text-white px-4 py-1.5 rounded-full">Most Popular</span></div>
-          <div class="text-xs font-semibold tracking-widest uppercase text-[#22C55E]/70 mb-4">Plus</div>
-          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 499</span><span class="text-sm text-white/30">/mo</span></div>
-          <p class="text-sm text-white/30 mb-7">Billed via M-Pesa</p>
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="text-[10px] font-bold tracking-widest uppercase bg-[#22C55E] text-white px-4 py-1.5 rounded-full whitespace-nowrap">Most Popular</span></div>
+          <div class="text-xs font-semibold tracking-widest uppercase text-[#22C55E]/70 mb-4">Premium · Monthly</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold whitespace-nowrap">KES 300</span></div>
+          <p class="text-sm text-white/30 mb-7 min-h-[2.5rem]">Paid monthly</p>
           <button onclick="openFormModal()" class="btn-primary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold text-white mb-8"><iconify-icon icon="lucide:bell-ring" width="16"></iconify-icon>Join Waitlist</button>
           <div class="space-y-3">
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon><strong>Unlimited</strong> AI coach queries</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Full budget (unlimited)</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Unlimited debt tracking</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>M-Pesa CSV analysis</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Health Index full breakdown</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Vault & Goals (unlimited)</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Monthly PDF reports</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>100 AI exchanges/month</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Unlimited saved budgets</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Unlimited holdings &amp; goals</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Full Fedha Health &amp; sharing</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Up to 24 months of recorded history</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/60"><iconify-icon icon="lucide:check" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Copy custom budgets to next month</div>
           </div>
         </div>
-        <div class="pricing-card rounded-2xl p-7 fade-up" style="transition-delay:0.16s">
-          <div class="text-xs font-semibold tracking-widest uppercase text-[#FBBF24]/70 mb-4">Wealth</div>
-          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold">KES 1,499</span><span class="text-sm text-white/30">/mo</span></div>
-          <p class="text-sm text-white/30 mb-7">Billed via M-Pesa</p>
+        <div class="pricing-card rounded-2xl p-7 relative fade-up" style="transition-delay:0.16s">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="text-[10px] font-bold tracking-widest uppercase bg-[#FBBF24] text-black px-4 py-1.5 rounded-full whitespace-nowrap">15% off</span></div>
+          <div class="text-xs font-semibold tracking-widest uppercase text-[#FBBF24]/70 mb-4">Premium · 6 Months</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold whitespace-nowrap">KES 1,530</span></div>
+          <p class="text-sm text-white/30 mb-7 min-h-[2.5rem]"><s>KES 1,800</s> · Paid every 6 months</p>
           <button onclick="openFormModal()" class="btn-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-white/70 mb-8">Join Waitlist</button>
           <div class="space-y-3">
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Everything in Plus</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Advanced AI wellness coaching</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>2 dedicated coach sessions/mo</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Estate planning education</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Legacy planning tools</div>
-            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>White-glove onboarding</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>100 AI exchanges/month</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Unlimited saved budgets</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Unlimited holdings &amp; goals</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Full Fedha Health &amp; sharing</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Up to 24 months of recorded history</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#FBBF24] shrink-0"></iconify-icon>Copy custom budgets to next month</div>
+          </div>
+        </div>
+        <div class="pricing-card rounded-2xl p-7 relative fade-up" style="transition-delay:0.24s">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="text-[10px] font-bold tracking-widest uppercase bg-[#a78bfa] text-black px-4 py-1.5 rounded-full whitespace-nowrap">20% off</span></div>
+          <div class="text-xs font-semibold tracking-widest uppercase text-[#a78bfa]/70 mb-4">Premium · Yearly</div>
+          <div class="flex items-baseline gap-1 mb-1"><span class="text-4xl font-bold whitespace-nowrap">KES 2,880</span></div>
+          <p class="text-sm text-white/30 mb-7 min-h-[2.5rem]"><s>KES 3,600</s> · Paid yearly</p>
+          <button onclick="openFormModal()" class="btn-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-white/70 mb-8">Join Waitlist</button>
+          <div class="space-y-3">
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>100 AI exchanges/month</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>Unlimited saved budgets</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>Unlimited holdings &amp; goals</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>Full Fedha Health &amp; sharing</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>Up to 24 months of recorded history</div>
+            <div class="flex items-center gap-2.5 text-sm text-white/50"><iconify-icon icon="lucide:check" width="16" class="text-[#a78bfa] shrink-0"></iconify-icon>Copy custom budgets to next month</div>
           </div>
         </div>
       </div>
+      <p class="text-center text-xs text-white/40 leading-relaxed mt-8">All Premium terms include the same benefits. Pay upfront and renew manually; no automatic charges. Discounts are compared with KES 300/month. AI coaching requires a verified account.</p>
     </div>
   </section>
 
@@ -729,32 +795,40 @@
       </div>
       <div class="space-y-3 fade-up">
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">When will ganji launch?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">We're currently in active development and targeting a beta launch in the coming months. Join the waitlist to be among the first to get access — we'll notify you by SMS the moment it's ready.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">When will ganji launch?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Ganji is preparing for early access. The app&#x27;s core tools are implemented; public AI access, account sign-in and payment acceptance are still being prepared and tested. Join the waitlist for release updates. A launch date has not been announced.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Will it be on the Google Play Store?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Initially, we'll distribute via direct APK download from our website while we go through the Play Store onboarding process. The APK will be fully safe, scanned, and verified. Play Store listing will follow.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">How will I get Ganji?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">The selected launch is a direct Android APK plus a web portal for accounts and payments. The portal does not host your financial records. A Play Store release is not part of the current launch plan because SMS access requires a separate distribution review.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is ganji a licensed financial advisor?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">No. ganji provides general financial education and planning tools only. We do not provide licensed investment, insurance, or credit advice. Always consult a CMA, IRA, or CBK-licensed professional before making financial decisions.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">Is ganji a licensed financial advisor?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Ganji helps you understand and plan your money. It gives general financial education only. It is not a licensed financial adviser, and nothing in the app, including the AI coach, is financial, investment, tax or legal advice. Check important decisions with a qualified professional.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">What are the Vault and Goals features?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Vault is a digital safe where you lock funds for set periods to build savings discipline. Goals lets you set savings targets (school fees, emergency fund, etc.) with visual progress tracking and AI-powered tips to reach them faster. Both are new features we're building for launch.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">What do Savings and Goals do?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Savings records an emergency balance, essential expenses and target months, with an optional assumed-return illustration. Goals records target amounts, dates and progress linked to holdings. Ganji does not hold, transfer or lock funds. Free includes three saved goals; Premium removes that cap.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is my data safe?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Absolutely. We're registered with the ODPC, use AES-256 encryption at rest and TLS 1.3 in transit, and you can delete or download all your data anytime. We never sell your data. A full Data Protection Impact Assessment (DPIA) is completed before launch.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">Where does my data go?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Financial records and chat history stay on your device. Optional AI coaching sends your question, recent chat and permitted aggregate figures through Ganji to OpenRouter and its model provider. Google/Firebase handles account sign-in and Pesapal handles checkout. PIN and biometric unlock are available. Read the privacy notice below for the full details.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">What is the ganji Health Index?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">It's an educational financial wellness indicator scored 0–100 across five pillars: Budgeting, Savings, Debt Management, Insurance Coverage, and Financial Literacy. It is NOT a credit score, CRB report, or regulated rating.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">What is the Fedha Health Index?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Premium&#x27;s educational 0–100 score uses Savings Rate (30%), Budgeting (20%), Debt Control (20%), Emergency Buffer (20%) and Protection (10%). It uses active transactions and saved inputs; demo transactions can contribute before SMS import and on iOS. The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution.</p></div>
         </div>
         <div class="faq-item feature-card rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-medium pr-4">Is this just for salaried employees?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
-          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Not at all. ganji is for every Kenyan adult — salaried employees, SME owners, university students, freelancers, chama members. The AI adapts its guidance to your specific income situation and financial goals.</p></div>
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">Is this just for salaried employees?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Ganji is for Kenyan adults aged 18 and over, including salaried workers, students, freelancers and business owners tracking their personal finances. You choose what to record and can use English or Swahili.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">Can I use real M-Pesa transactions on iPhone?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">M-Pesa inbox import is Android-only and requires your permission. iPhone cannot read the SMS inbox, so its current build uses example transactions. Before Android import, and after an inbox read failure, example transactions are also used. Example transactions are excluded from data exports. Manual or pasted transaction entry is on the roadmap.</p></div>
+        </div>
+        <div class="faq-item feature-card rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full flex items-center justify-between p-5 text-left" aria-expanded="false"><span class="text-sm font-medium pr-4">What happens when I delete my data?</span><iconify-icon icon="lucide:plus" width="18" class="faq-icon text-white/30 shrink-0"></iconify-icon></button>
+          <div class="faq-answer px-5 pb-5"><p class="text-sm text-white/40 leading-relaxed">Settings lets you export a JSON copy and erase local financial records, chat and assessment data. Language and theme preferences and membership/payment recovery are retained. Cloud-account deletion is a separate action; some billing and usage records remain, and deleting or reinstalling does not reset AI allowances. Financial backup and JSON restore are not available yet.</p></div>
         </div>
       </div>
     </div>
@@ -769,22 +843,21 @@
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center fade-up">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 mb-8"><iconify-icon icon="lucide:bell-ring" width="14" class="text-[#22C55E]"></iconify-icon><span class="text-xs font-semibold text-[#22C55E] tracking-wide">JOIN THE WAITLIST · FREE</span></div>
       <h2 class="font-dm text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-5">Be among the first to<br><span class="font-semibold">get ganji</span></h2>
-      <p class="text-base text-white/40 leading-relaxed mb-10 max-w-lg mx-auto">We're building ganji for you. Leave your details and we'll notify you the moment early access opens. No spam. Ever.</p>
+      <p class="text-base text-white/40 leading-relaxed mb-10 max-w-lg mx-auto">We're preparing Ganji for early access. Join the Google Form waitlist to receive release updates.</p>
 
       <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
         <div class="relative flex-1">
-          <iconify-icon icon="lucide:phone" width="16" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
-          <input type="tel" id="phoneFinal" placeholder="Enter your phone number" class="waitlist-input w-full pl-10 pr-4 py-4 rounded-xl text-sm text-white placeholder-white/25 font-medium">
+          <div class="waitlist-input flex items-center gap-3 px-4 py-4 rounded-xl text-sm text-white/50"><iconify-icon icon="lucide:bell-ring" width="16" class="text-[#22C55E] shrink-0"></iconify-icon>Get early access updates</div>
         </div>
         <button onclick="openFormModal()" class="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-sm font-semibold text-white whitespace-nowrap shrink-0"><iconify-icon icon="lucide:arrow-right" width="18"></iconify-icon>Join</button>
       </div>
-      <p class="text-[11px] text-white/20 mb-8">Opens a quick form · Takes 30 seconds · Your info stays private</p>
+      <p class="text-[11px] text-white/20 mb-8">Opens a Google Form · Share your contact details there</p>
 
       <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/25">
-        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/50"></iconify-icon> ODPC Registered</span>
-        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/50"></iconify-icon> Info stays private</span>
-        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/50"></iconify-icon> Android 8.0+</span>
-        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trash-2" width="14" class="text-[#22C55E]/50"></iconify-icon> Delete data anytime</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="14" class="text-[#22C55E]/50"></iconify-icon> English &amp; Swahili</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:lock" width="14" class="text-[#22C55E]/50"></iconify-icon> Privacy controls in app</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:smartphone" width="14" class="text-[#22C55E]/50"></iconify-icon> Android APK at launch</span>
+        <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trash-2" width="14" class="text-[#22C55E]/50"></iconify-icon> Export &amp; erase local records</span>
       </div>
     </div>
   </section>
@@ -795,12 +868,13 @@
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
         <div class="sm:col-span-2 lg:col-span-1">
           <span class="text-[1.65rem] font-extrabold tracking-tight leading-none inline-block mb-4"><span class="logo-g">g</span><span class="logo-a">a</span><span class="logo-n">n</span><span class="logo-j">j</span><span class="logo-i">i</span></span>
-          <p class="text-sm text-white/30 leading-relaxed mb-4">Kenya's first AI-powered personal finance coach. Built in Nairobi for every Kenyan.</p>
+          <p class="text-sm text-white/30 leading-relaxed mb-4">A personal finance companion by Zenity LMT. Built for Kenyan adults, in English and Swahili.</p>
           <p class="text-xs text-white/20 italic">"Weka Akili Pesa Yako"</p>
         </div>
         <div>
           <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Product</h4>
           <div class="space-y-3">
+            <a href="#roadmap" class="block text-sm text-white/40 hover:text-white transition-colors">Roadmap</a>
             <a href="#features" class="block text-sm text-white/40 hover:text-white transition-colors">Features</a>
             <a href="#pricing" class="block text-sm text-white/40 hover:text-white transition-colors">Pricing</a>
             <a href="#who" class="block text-sm text-white/40 hover:text-white transition-colors">Who It's For</a>
@@ -808,37 +882,38 @@
           </div>
         </div>
         <div>
-          <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Legal & Compliance</h4>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Privacy &amp; Terms</h4>
           <div class="space-y-3">
-            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Privacy Notice</a>
-            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">Data Protection</a>
-            <a href="#" class="block text-sm text-white/40 hover:text-white transition-colors">AI Disclaimer</a>
+            <button type="button" onclick="openInfoModal('privacy')" class="block text-left text-sm text-white/40 hover:text-white transition-colors">Privacy Notice</button>
+            <button type="button" onclick="openInfoModal('terms')" class="block text-left text-sm text-white/40 hover:text-white transition-colors">Terms of Service</button>
+            <button type="button" onclick="openInfoModal('privacy')" class="block text-left text-sm text-white/40 hover:text-white transition-colors">Data Protection</button>
+            <button type="button" onclick="openInfoModal('ai')" class="block text-left text-sm text-white/40 hover:text-white transition-colors">AI Disclaimer</button>
           </div>
         </div>
         <div>
           <h4 class="text-xs font-semibold tracking-widest uppercase text-white/30 mb-5">Contact</h4>
           <div class="space-y-3">
-            <a href="mailto:hello@ganji.app" class="block text-sm text-white/40 hover:text-white transition-colors">hello@ganji.app</a>
+            <a href="mailto:support@ganji.co.ke" class="block text-sm text-white/40 hover:text-white transition-colors">support@ganji.co.ke</a>
             <p class="text-sm text-white/40">Nairobi, Kenya</p>
+            <!-- Replace placeholder links with Ganji social profile URLs when available. -->
             <div class="flex items-center gap-3 mt-4">
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:twitter" width="16" class="text-white/40"></iconify-icon></a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:instagram" width="16" class="text-white/40"></iconify-icon></a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:linkedin" width="16" class="text-white/40"></iconify-icon></a>
+              <a href="#" aria-label="X (Twitter)" title="X (Twitter)" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:twitter" width="16" class="text-white/40" aria-hidden="true"></iconify-icon></a>
+              <a href="https://instagram.com/ganji_ke254" target="_blank" rel="noopener noreferrer" aria-label="Instagram: @ganji_ke254 (opens in a new tab)" title="Instagram: @ganji_ke254" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:instagram" width="16" class="text-white/40" aria-hidden="true"></iconify-icon></a>
+              <a href="#" aria-label="LinkedIn" title="LinkedIn" class="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] transition-colors"><iconify-icon icon="lucide:linkedin" width="16" class="text-white/40" aria-hidden="true"></iconify-icon></a>
             </div>
           </div>
         </div>
       </div>
       <div class="border-t border-white/[0.06] pt-8 mb-8">
         <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/20 mb-4">
-          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="12" class="text-[#22C55E]/40"></iconify-icon> ODPC Registered Data Controller</span>
-          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:file-text" width="12" class="text-[#FBBF24]/40"></iconify-icon> DPIA Completed</span>
-          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trademark" width="12" class="text-[#38BDF8]/40"></iconify-icon> KIPI Trademark Filed</span>
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:shield-check" width="12" class="text-[#22C55E]/40"></iconify-icon> Financial records stored locally</span>
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:file-text" width="12" class="text-[#FBBF24]/40"></iconify-icon> Optional usage analytics</span>
+          <span class="flex items-center gap-1.5"><iconify-icon icon="lucide:trademark" width="12" class="text-[#38BDF8]/40"></iconify-icon> PIN &amp; biometric unlock</span>
         </div>
-        <p class="text-[11px] text-white/15 leading-relaxed max-w-3xl">ganji provides general financial education and planning tools only. Nothing in this app constitutes licensed investment, insurance, or credit advice. Always consult a CMA, IRA, or CBK-licensed professional before making financial decisions. The ganji Health Index is an educational planning tool only — it is not a credit score, CRB report, or regulated financial rating.</p>
+        <p class="text-[11px] text-white/15 leading-relaxed max-w-3xl">ganji provides general financial education and planning tools only. Nothing in this app constitutes licensed investment, insurance, or credit advice. Always consult a CMA, IRA, or CBK-licensed professional before making financial decisions. The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution.</p>
       </div>
       <div class="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-white/15">
-        <p>© 2025 ganji Technologies Ltd. All rights reserved.</p>
+        <p>© 2026 Zenity LMT. All rights reserved.</p>
         <p>Designed & Built in Nairobi, Kenya 🇰🇪</p>
       </div>
     </div>
@@ -891,9 +966,24 @@
         const item = btn.closest('.faq-item');
         const answer = item.querySelector('.faq-answer');
         const isActive = item.classList.contains('active');
-        document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('active'); i.querySelector('.faq-answer').classList.remove('open'); });
-        if (!isActive) { item.classList.add('active'); answer.classList.add('open'); }
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('active');
+          i.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+          const panel = i.querySelector('.faq-answer');
+          panel.classList.remove('open');
+          panel.style.maxHeight = '';
+        });
+        if (!isActive) {
+          item.classList.add('active');
+          btn.setAttribute('aria-expanded', 'true');
+          answer.classList.add('open');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
       });
+    });
+
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.faq-answer.open').forEach(panel => { panel.style.maxHeight = panel.scrollHeight + 'px'; });
     });
 
     // --- Google Form Modal ---
@@ -902,17 +992,23 @@
     const formModalClose = document.getElementById('formModalClose');
     const formSrc = formIframe.getAttribute('data-src');
 
+    let waitlistTrigger;
     function openFormModal() {
+      waitlistTrigger = document.activeElement;
+      formModal.inert = false;
       // Lazy-load the iframe only when opened
       if (formIframe.src === 'about:blank' || !formIframe.src.includes('google')) {
         formIframe.src = formSrc;
       }
       formModal.classList.add('active');
+      formModalClose.focus();
       document.body.style.overflow = 'hidden';
     }
 
     function closeFormModal() {
       formModal.classList.remove('active');
+      formModal.inert = true;
+      waitlistTrigger?.focus();
       document.body.style.overflow = '';
     }
 
@@ -924,10 +1020,42 @@
       if (e.key === 'Escape' && formModal.classList.contains('active')) closeFormModal();
     });
 
+    // Notices use the English app/portal legal copy, with a website waitlist note.
+    const appNotices = {"privacy": {"title": "Privacy notice", "intro": "Ganji is a personal finance app made by Zenity LMT in Kenya. This notice explains, in plain language, what information Ganji uses, where it goes and the choices you have.", "updated": "Last updated: 14 October 2026", "sections": [["Website waitlist", "Joining the waitlist opens a Google Form. The contact details you submit are collected through Google Forms for Ganji early-access updates. Review the form before submitting. For questions or removal requests, contact support@ganji.co.ke. The app data practices below are separate from waitlist signup."], ["What stays on your phone", "Your financial records (profile, assessment answers, budgets, expenses, loans, debts, assets, goals, emergency savings plan, coverage records, asset cash movements and recorded valuations) and chat history are stored on this device. Optional reminders use generic text and are scheduled on this device. Sharing a Fedha card opens the share sheet with your score, pillar scores, date and educational disclaimer. Optional AI coaching shares the information described below. Cloud backup and financial-record sync are not implemented."], ["M-Pesa messages (Android)", "If you turn on M-Pesa import, Ganji reads the M-Pesa messages in your phone's inbox to list your transactions. The messages are read on your phone and never uploaded. You can turn import off at any time in Settings, or remove the SMS permission in your phone's settings. iPhones don't let apps read messages, so on iPhone Ganji shows example transactions instead."], ["AI coach", "Optional AI coaching sends your question, recent chat and, unless AI Profiling is off, aggregate financial context through Ganji to OpenRouter and its model provider. Raw SMS, transaction codes, phone numbers and user-defined labels are excluded from that context. These services may be outside Kenya. Ganji keeps account-wide lifetime Free usage, monthly Premium usage and request fingerprints. Replies are cached for retry recovery for up to 30 days, then cleared during housekeeping. Anything typed in chat is sent as written; avoid personal details. Deleting local chat does not reset server usage."], ["Accounts and Premium payments", "Google sign-in uses Google and Firebase Authentication to verify your account. Firebase processes your Google identity, basic profile information and authentication records. Ganji stores your verified email, Firebase project/user identifiers, secure session hashes, membership dates, payment receipts, lifetime Free AI usage and monthly Premium AI usage on its server. Pesapal processes checkout and receives your billing email. Card details are entered on Pesapal checkout and are not stored by Ganji. Signing in on another device restores membership, not local financial records. Manage, export or delete your cloud account from Ganji Premium. Google-linked deletion requires a fresh Google sign-in, removes the Firebase sign-in identity, revokes Ganji sessions and clears cached AI replies; minimal identity tombstones, receipt and usage records remain for payment recovery and quota accounting. Deleting local data does not cancel paid access or reset quotas."], ["Crash reports", "When crash reporting is configured and enabled, technical error details are sent to Sentry to help fix bugs. Ganji disables default personal-data collection and console-log breadcrumbs, but error messages can still contain information involved in a failure. You can turn crash reporting off in Settings."], ["Usage analytics", "Usage analytics are off unless you choose them in Welcome or Settings. When enabled and configured, Ganji tells Mixpanel which screens you open and which features you use (for example, that a budget was created), without amounts, names, phone numbers or messages. Turning analytics off stops this and clears the anonymous identifier."], ["Your rights", "Under Kenya's Data Protection Act you can: see and copy your data (Settings > Download My Data); correct it (edit your name, or Update my answers); delete it (Settings > Delete my data); object to processing (turn off AI Profiling, usage analytics or crash reports); and withdraw your consent at any time. You can also complain to the Office of the Data Protection Commissioner (ODPC)."], ["Children", "Ganji is for adults aged 18 and over."], ["Contact and changes", "Questions about privacy: support@ganji.co.ke. If this notice changes, Ganji will show the new version in the app."]]}, "terms": {"title": "Terms of use", "intro": "By using Ganji you agree to these terms. Please read them together with the Privacy notice.", "updated": "Last updated: 14 October 2026", "sections": [["Education, not advice", "Ganji helps you understand and plan your money. It gives general financial education only. It is not a licensed financial adviser, and nothing in the app, including the AI coach, is financial, investment, tax or legal advice. Check important decisions with a qualified professional."], ["Fedha Health", "The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution."], ["Loans and debts", "Loan information shown is user-entered for educational tracking only. Ganji is not a lender or credit reference bureau."], ["AI coach", "AI answers can be wrong or incomplete. Verify important decisions. Free includes 3 successful messages per verified account for its lifetime, with no reset. Active Premium includes 100 total messages per calendar month, including Free messages used in that month. Premium messages do not consume the lifetime Free allowance; unused Free messages remain after expiry. Failed replies do not consume an allowance. Clearing chat, renewing or reinstalling does not reset usage."], ["Premium access and renewal", "Free allows 3 saved holdings, 3 saved goals separately and 3 saved budgets in total. Premium allows unlimited holdings, goals and budgets while active, full Fedha Health and copying custom budgets to next month. All displayed payment periods include the same Premium features. You pay the displayed total upfront through Pesapal; renewal is manual, with no automatic charges. Access starts after payment is verified; early renewal extends your existing period. Only Premium AI usage resets by calendar month in Kenya time, separately from paid access dates. Free AI usage never resets. Expiry keeps existing financial records available for viewing, editing, deletion and export but limits new additions and Premium features. Contact support for failed, duplicate or disputed payments and refund requests; refunds are subject to review and are not automatic."], ["Your information", "You are responsible for the accuracy of what you enter. Keep your phone secure, for example with PIN lock in Settings. Your records live only on your phone, so losing or resetting it without a copy (Download My Data) loses them."], ["Changes and availability", "Features may change. The AI coach needs an internet connection and may sometimes be unavailable."], ["Contact", "Questions about these terms: support@ganji.co.ke."]]}, "ai": {"title": "AI and Fedha disclaimer", "intro": "Ganji helps you understand and plan your money. It gives general financial education only. It is not a licensed financial adviser, and nothing in the app, including the AI coach, is financial, investment, tax or legal advice. Check important decisions with a qualified professional.", "sections": [["AI coaching", "AI answers can be wrong or incomplete. Verify important decisions. Free includes 3 successful messages per verified account for its lifetime, with no reset. Active Premium includes 100 total messages per calendar month, including Free messages used in that month. Premium messages do not consume the lifetime Free allowance; unused Free messages remain after expiry. Failed replies do not consume an allowance. Clearing chat, renewing or reinstalling does not reset usage."], ["Fedha Health", "The Fedha Health Index is an educational financial wellness planning tool only. It is not a credit score, CRB report, or regulated financial rating. It has no effect on your creditworthiness and is not used by any lender, insurer, or financial institution."]]}};
+    const infoDialog = document.getElementById('infoDialog');
+    function openInfoModal(key) {
+      const notice = appNotices[key];
+      if (!notice) return;
+      document.getElementById('infoTitle').textContent = notice.title;
+      const body = document.getElementById('infoBody');
+      body.replaceChildren();
+      for (const value of [notice.updated, notice.intro].filter(Boolean)) {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = value;
+        body.append(paragraph);
+      }
+      for (const [heading, copy] of notice.sections) {
+        const section = document.createElement('section');
+        const title = document.createElement('h3');
+        title.className = 'text-base font-semibold text-white/90 mb-2';
+        title.textContent = heading;
+        const paragraph = document.createElement('p');
+        paragraph.textContent = copy;
+        section.append(title, paragraph);
+        body.append(section);
+      }
+      infoDialog.showModal();
+      document.body.style.overflow = 'hidden';
+      infoDialog.scrollTop = 0;
+    }
+    infoDialog.addEventListener('close', () => { document.body.style.overflow = ''; });
+
     // --- Smooth Scroll ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
-        const target = document.querySelector(this.getAttribute('href'));
+        const href = this.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.getElementById(href.slice(1));
         if (target) { e.preventDefault(); window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); }
       });
     });
